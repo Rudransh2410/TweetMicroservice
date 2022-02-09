@@ -1,0 +1,34 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tweetmicroservice-deployment
+  labels:
+    app: TweetMicroservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: TweetMicroservice  
+  template:
+    metadata:
+      labels:
+        app: TweetMicroservice
+    spec:
+      containers:
+      - name: tweetmicroservice
+        image: authorizationmscr.azurecr.io/tweetmsrepo:latest
+        ports:
+        - containerPort: 8080
+      imagePullSecrets:
+      - name: tweetapisvcsecret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tweetmicroservicesvc
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: TweetMicroservice
